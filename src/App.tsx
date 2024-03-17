@@ -1,38 +1,44 @@
-import * as React from "react"
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+import { ChakraProvider, Box, extendTheme } from "@chakra-ui/react";
+import Layout from "./layout/Layout";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Demos from "./pages/Demos";
+import Post from "./pages/Post";
+import Features from "./pages/Features";
+import Categories from "./pages/Categories";
+import Shop from "./pages/Shop";
+import BuyNow from "./pages/BuyNow";
+import { useState } from "react";
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+const breakpoints = {
+  xs: "400px",
+  sm: "480px",
+  md: "768px",
+  lg: "992px",
+  xl: "1280px",
+  "2xl": "1536px",
+};
+
+const theme = extendTheme({ breakpoints });
+
+export const App = () => {
+  const [filteredPosts, setFilteredPosts] = useState<IPost[]>();
+
+  return (
+    <ChakraProvider theme={theme}>
+      <Layout setFilteredPosts={setFilteredPosts}>
+        <Box>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/demos" element={<Demos />} />
+            <Route path="/post" element={<Post posts={filteredPosts} />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/buy-now" element={<BuyNow />} />
+          </Routes>
+        </Box>
+      </Layout>
+    </ChakraProvider>
+  );
+};
